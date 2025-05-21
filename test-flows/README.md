@@ -15,7 +15,7 @@ Answer the questions as you like.
 
 To run InfluxDB 1.8, 2.0 and Chronograf using the config file in the current directory:
 
-    docker-compose up
+    docker compose up
 
 ## Set up databases
 
@@ -32,10 +32,9 @@ To run InfluxDB 1.8, 2.0 and Chronograf using the config file in the current dir
         * Username: username
         * Password: password
     
-2 - Launch Chronograf for InfluxDB 2.0: https://localhost:9999
+2 - Launch InfluxDB 2.0: https://localhost:9999
 
 On set up initial user use the following:
-
 * Username: my-user
 * Password: my-password
 * Organisation: my-org

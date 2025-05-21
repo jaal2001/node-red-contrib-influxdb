@@ -61,9 +61,17 @@ module.exports = function (RED) {
             clientOptions = {
                 url: n.url,
                 token,
-                timeout,
-                rejectUnauthorized: n.rejectUnauthorized
+                timeout
             }
+
+            const v2RejectUnauthorized = n.rejectUnauthorized;
+
+            if (v2RejectUnauthorized !== undefined) {
+                clientOptions.transportOptions = {
+                    rejectUnauthorized: v2RejectUnauthorized
+                };
+            }
+
             this.client = new InfluxDBClientV2(clientOptions);
         } else if (this.influxdbVersion === VERSION_30) {            
             if (!n.url) {
