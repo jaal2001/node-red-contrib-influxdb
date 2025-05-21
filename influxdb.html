@@ -1,5 +1,5 @@
 <script type="text/html" data-template-name="influxdb">    
-    <div class="form-row" style="min-width: 500px;"</div>
+    <div class="form-row" style="min-width: 500px;">
         <label for="node-config-input-name"><i class="fa fa-tag"></i> <span data-i18n="node-red:common.label.name"></span></label>
         <input type="text" id="node-config-input-name" data-i18n="[placeholder]node-red:common.label.name">
     </div>
@@ -8,43 +8,53 @@
         <select type="text" style="width: 100px" id="node-config-input-influxdbVersion">
             <option value="1.x">1.x</option> 
             <option value="1.8-flux">1.8-flux</option> 
-            <option value="2.0">2.0</option> 
+            <option value="2.0">2.0</option>
+            <option value="3.0">3.0</option>
         </select>
     </div>
+    <!-- Hostname and port fields for v1.x -->
     <div class="form-row" id="node-config-row-hostname-port">
         <label for="node-config-input-hostname"><i class="fa fa-server"></i> <span data-i18n="influxdb.label.host"></span></label>
         <input class="input-append-left" type="text" id="node-config-input-hostname" placeholder="localhost" style="width: 40%;" >
         <label for="node-config-input-port" style="margin-left: 10px; width: 35px; "> <span data-i18n="influxdb.label.port"></span></label>
         <input type="text" id="node-config-input-port" style="width:45px">
     </div>
+    <!-- URL field for v1.8-flux, v2.0 and v3.0 -->
     <div class="form-row" id="node-config-row-url">
         <label for="node-config-input-url"><i class="fa fa-server"></i> <span data-i18n="influxdb.label.url"></span></label>
         <input class="input-append-left" type="text" id="node-config-input-url" placeholder="http://localhost:8086">
     </div>
+    <!-- Database field for v1.x -->
     <div class="form-row" id="node-config-row-database">
         <label for="node-config-input-database"><i class="fa fa-database"></i> <span data-i18n="influxdb.label.database"></span></label>
         <input type="text" id="node-config-input-database">
     </div>
+    <!-- User field for v1.x and v1.8 -->
     <div class="form-row" id="node-config-row-username">
         <label for="node-config-input-username"><i class="fa fa-user"></i> <span data-i18n="node-red:common.label.username"></span></label>
         <input type="text" id="node-config-input-username">
     </div>
+    <!-- Password field for v1.x and v1.8 -->
     <div class="form-row" id="node-config-row-password">
         <label for="node-config-input-password"><i class="fa fa-lock"></i> <span data-i18n="node-red:common.label.password"></span></label>
         <input type="password" id="node-config-input-password">
     </div>
+    <!-- Token field for v2.0 and v3.0 -->
     <div class="form-row" id="node-config-row-token">
         <label for="node-config-input-token"><i class="fa fa-lock"></i> <span data-i18n="influxdb.label.token"></span></label>
         <input type="password" id="node-config-input-token">
     </div>
+    <!-- Timeout field for v1.8, v2.0 and v3.0 -->
     <div class="form-row" id="node-config-row-timeout">
         <label for="node-config-input-timeout" style="width:auto"><i class="fa fa-clock-o"></i> <span data-i18n="influxdb.label.timeout"></span></label>
         <input type="text" style="margin-left: 10px; width: 50px" id="node-config-input-timeout" placeholder="10">
     </div>
+    <!-- Reject unauthorized field for v1.8, v2.0 and v3.0 -->
     <div class="form-row" id="node-config-row-rejectUnauthorized">
         <input type="checkbox" id="node-config-input-rejectUnauthorized" style="display: inline-block; width: auto; vertical-align: top;">
         <label for="node-config-input-rejectUnauthorized" style="width: auto" data-i18n="influxdb.label.reject-unauthorized"></label>
     </div>
+    <!--- Enable secure connection field for v1.x -->
     <div class="form-row" id="node-config-row-enableSecureConnection">
         <input type="checkbox" id="node-config-input-usetls" style="display: inline-block; width: auto; vertical-align: top;">
         <label for="node-config-input-usetls" style="width: auto" data-i18n="influxdb.label.use-tls"></label>
@@ -83,7 +93,7 @@
             url: {value: "http://localhost:8086",
                 validate:function(url) {
                     let version = getVersion();
-                    if (version === '1.8-flux' || version === '2.0') {
+                    if (version === '1.8-flux' || version === '2.0' || version === '3.0') {
                         return url.length > 0;
                     }
                     return true;
@@ -100,7 +110,7 @@
         label: function () {
             this.influxdbVersion = this.influxdbVersion || '1.x';   // for compatibility
             var version = "[v"+this.influxdbVersion+"] ";
-            if (this.influxdbVersion === '1.8-flux' || this.influxdbVersion === '2.0') {
+            if (this.influxdbVersion === '1.8-flux' || this.influxdbVersion === '2.0' || this.influxdbVersion === '3.0') {
                 return this.name ? version + this.name : version + this.url;
             } else {
                 return this.name ? version + this.name : version + this.hostname + ":" + this.port + "/" + this.database;
@@ -151,6 +161,18 @@
                 $("#node-config-row-enableSecureConnection").hide();  
             }
 
+            function update30Options() {                
+                $("#node-config-row-hostname-port").hide();
+                $("#node-config-row-url").show();
+                $("#node-config-row-database").hide();
+                $("#node-config-row-username").hide();
+                $("#node-config-row-password").hide();
+                $("#node-config-row-token").show();
+                $("#node-config-row-timeout").show();
+                $("#node-config-row-rejectUnauthorized").show();   
+                $("#node-config-row-enableSecureConnection").hide();  
+            }
+
             $("#node-config-input-influxdbVersion").change(function () {
                 let selected = $("#node-config-input-influxdbVersion option:selected").val();
 
@@ -160,6 +182,9 @@
                         break;
                     case '2.0':
                         update20Options();
+                        break;
+                    case '3.0':
+                        update30Options();
                         break;
                     default:    // 1.x
                         update18Options();
@@ -227,8 +252,17 @@
         </div>  
     </div>
     <div class="form-row" id="node-input-row-precisionV18FluxV20">
-        <label for="node-input-precisionV18FluxV20" style="width:35%"><i class="fa fa-clock-o"></i> <span data-i18n="influxdb.label.time-precision"></span></label>
-        <select type="text" id="node-input-precisionV18FluxV20" style="width:55%">
+        <label for="node-input-precisionV18FluxV20"><i class="fa fa-clock-o"></i> <span data-i18n="influxdb.label.time-precision"></span></label>
+        <select type="text" id="node-input-precisionV18FluxV20">
+            <option value="ns">Nanoseconds (ns)</option> 
+            <option value="us">Microseconds (us)</option> 
+            <option value="ms">Milliseconds (ms)</option> 
+            <option value="s">Seconds (s)</option>
+        </select>  
+    </div>
+    <div class="form-row" id="node-input-row-precisionV30">
+        <label for="node-input-precisionV30"><i class="fa fa-clock-o"></i> <span data-i18n="influxdb.label.time-precision"></span></label>
+        <select type="text" id="node-input-precisionV30">
             <option value="ns">Nanoseconds (ns)</option> 
             <option value="us">Microseconds (us)</option> 
             <option value="ms">Milliseconds (ms)</option> 
@@ -236,8 +270,8 @@
         </select>  
     </div>
     <div class="form-row" id="node-input-row-retentionPolicyV18Flux">
-        <label for="node-input-retentionPolicyV18Flux" style="width:35%"><i class="fa fa-gavel"></i> <span data-i18n="influxdb.label.retention-policy"></span></label>
-        <input type="text" id="node-input-retentionPolicyV18Flux" style="width:55%">
+        <label for="node-input-retentionPolicyV18Flux"><i class="fa fa-gavel"></i> <span data-i18n="influxdb.label.retention-policy"></span></label>
+        <input type="text" id="node-input-retentionPolicyV18Flux">
     </div>
 
     <div class="form-tips" id="node-warning-measurement"><span data-i18n="[html]influxdb.tip.measurement"></span></div>
@@ -262,6 +296,7 @@
 
     <p><b>InfluxDB 1.8 Flux and InfluxDB 2.0 Mode</b></p>
     <p>If no retention policy is specified, <i>autogen</i> will be assumed.</p>
+    <p>For v3.0, 'Bucket / Database' field refers to the InfluxDB v3 database name.</p>
 </script>
 
 <script type="text/javascript">
@@ -294,6 +329,7 @@
                 }
             },
             precisionV18FluxV20: {value: "ms"},
+            precisionV30: {value: "ms"},
             retentionPolicyV18Flux: {value: ""},
             org: {value: "organisation",
                 validate:function(org) {
@@ -372,6 +408,17 @@
                 $("#node-warning-retention-policy").hide();
             }
 
+            function update30Options() {
+                $("#node-input-row-org").show();
+                $("#node-input-row-bucket").show();           
+                $("#node-input-row-database").hide();
+                $("#node-input-row-enableAdvancedOptions").hide();
+                $("#node-input-row-precisionV18FluxV20").hide();
+                $("#node-input-row-precisionV30").show();
+                $("#node-input-row-retentionPolicyV18Flux").hide();
+                $("#node-warning-retention-policy").hide();
+            }
+
             $("#node-input-influxdb").change(function () {
                 switch (selectedVersion()) {
                     case 'v1.8-flux':
@@ -380,6 +427,9 @@
                     case 'v2.0':
                         update20Options();                    
                         break;
+                    case 'v3.0':
+                        update30Options();                    
+                        break;S
                     default:
                         update18Options();
                 }
@@ -449,8 +499,17 @@
         </div>  
     </div>
     <div class="form-row" id="node-input-row-precisionV18FluxV20">
-        <label for="node-input-precisionV18FluxV20" style="width:35%"><i class="fa fa-clock-o"></i> <span data-i18n="influxdb.label.time-precision"></span></label>
-        <select type="text" id="node-input-precisionV18FluxV20" style="width:55%">
+        <label for="node-input-precisionV18FluxV20"><i class="fa fa-clock-o"></i> <span data-i18n="influxdb.label.time-precision"></span></label>
+        <select type="text" id="node-input-precisionV18FluxV20">
+            <option value="ns">Nanoseconds (ns)</option> 
+            <option value="us">Microseconds (us)</option> 
+            <option value="ms">Milliseconds (ms)</option> 
+            <option value="s">Seconds (s)</option>
+        </select>  
+    </div>
+    <div class="form-row" id="node-input-row-precisionV30">
+        <label for="node-input-precisionV30"><i class="fa fa-clock-o"></i> <span data-i18n="influxdb.label.time-precision"></span></label>
+        <select type="text" id="node-input-precisionV30">
             <option value="ns">Nanoseconds (ns)</option> 
             <option value="us">Microseconds (us)</option> 
             <option value="ms">Milliseconds (ms)</option> 
@@ -495,6 +554,7 @@
                 }
             },
             precisionV18FluxV20: {value: "ms"},
+            precisionV30: {value: "ms"},
             retentionPolicyV18Flux: {value: ""},
             org: {value: "organisation",
                 validate:function(org) {
@@ -532,6 +592,7 @@
                 $("#node-input-row-database").hide();
                 $("#node-input-row-enableAdvancedOptions").show();
                 $("#node-input-row-precisionV18FluxV20").hide();
+                $("#node-input-row-precisionV30").hide();
                 $("#node-input-row-retentionPolicyV18Flux").hide();
                 $("#node-warning-retention-policy").show();
             }
@@ -542,6 +603,7 @@
                 $("#node-input-row-database").show();
                 $("#node-input-row-enableAdvancedOptions").hide();
                 $("#node-input-row-precisionV18FluxV20").show();
+                $("#node-input-row-precisionV30").hide();
                 $("#node-input-row-retentionPolicyV18Flux").show();
                 $("#node-warning-retention-policy").show();
             }
@@ -552,9 +614,22 @@
                 $("#node-input-row-database").hide();
                 $("#node-input-row-enableAdvancedOptions").hide();
                 $("#node-input-row-precisionV18FluxV20").show();
+                $("#node-input-row-precisionV30").hide();
                 $("#node-input-row-retentionPolicyV18Flux").hide();
                 $("#node-warning-retention-policy").hide();
             }
+
+            function update30Options() {
+                $("#node-input-row-org").show();
+                $("#node-input-row-bucket").show();           
+                $("#node-input-row-database").hide();
+                $("#node-input-row-enableAdvancedOptions").hide();
+                $("#node-input-row-precisionV18FluxV20").hide();
+                $("#node-input-row-precisionV30").show();
+                $("#node-input-row-retentionPolicyV18Flux").hide();
+                $("#node-warning-retention-policy").hide();
+            }
+
             $("#node-input-influxdb").change(function () {
                 switch (selectedVersion()) {
                     case 'v1.8-flux':
@@ -562,6 +637,9 @@
                         break;
                     case 'v2.0':
                         update20Options();                    
+                        break;
+                    case 'v3.0':
+                        update30Options();                    
                         break;
                     default:
                         update18Options();
@@ -607,6 +685,17 @@
     <div class="form-row" id="node-input-row-org">
         <label for="node-input-org"><i class="fa fa-sitemap"></i> <span data-i18n="influxdb.label.org"></span></label>
         <input type="text" id="node-input-org">
+    </div>
+    <div class="form-row" id="node-input-row-database">
+        <label for="node-input-database"><i class="fa fa-database"></i> <span data-i18n="influxdb.label.bucket"></span></label>
+        <input type="text" id="node-input-database">
+    </div>
+    <div class="form-row" id="node-input-row-querylanguage">
+        <label for="node-input-queryLanguage"><i class="fa fa-language"></i> <span data-i18n="influxdb.label.queryLanguage"></span></label>
+        <select id="node-input-queryLanguage" style="width:70%;">
+            <option value="sql" data-i18n="influxdb.label.sql">SQL</option>
+            <option value="influxql" data-i18n="influxdb.label.influxql">InfluxQL</option>
+        </select>
     </div>
     <div class="form-row" id="node-input-row-extras">
         <input type="checkbox" id="node-input-rawOutput" style="display: inline-block; width: auto; vertical-align: top;">
@@ -682,7 +771,8 @@
                     }
                     return true;
                 }
-            }
+            },
+            queryLanguage: {value: "influxql"}
         },
         inputs: 1,
         outputs: 1,
@@ -730,16 +820,29 @@
             function update18Options() {
                 $("#node-input-row-org").hide();
                 $("#node-input-row-extras").show();
+                $("#node-input-row-querylanguage").hide();
+                $("#node-input-row-database").hide();                
             }
 
             function update18FluxOptions() {                
                 $("#node-input-row-org").hide();
                 $("#node-input-row-extras").hide();
+                $("#node-input-row-querylanguage").hide();
+                $("#node-input-row-database").hide(); 
             }
 
             function update20Options() {
                 $("#node-input-row-org").show();
                 $("#node-input-row-extras").hide();
+                $("#node-input-row-querylanguage").hide();
+                $("#node-input-row-database").hide();
+            }
+
+            function update30Options() {
+                $("#node-input-row-org").show();
+                $("#node-input-row-extras").hide();
+                $("#node-input-row-database").show(); 
+                $("#node-input-row-querylanguage").show();
             }
 
             $("#node-input-influxdb").change(function () {
@@ -749,6 +852,9 @@
                         break;
                     case 'v2.0':
                         update20Options();                    
+                        break;
+                    case 'v3.0':
+                        update30Options();                    
                         break;
                     default:
                         update18Options();

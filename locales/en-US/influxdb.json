@@ -19,18 +19,25 @@
             "timeout": "Connection timeout (seconds)",
             "reject-unauthorized": "Verify server certificate",
             "org": "Organization",
-            "bucket": "Bucket"
+            "bucket": "Bucket",
+            "queryLanguage": "Query Language"
         },
         "errors":{
             "nomeasurement":"No measurement specified",
-            "missingconfig":"Configuration missing",
-            "invalidconfig":"Configuration invalid",
-            "noquery":"No query"
+            "missingconfig":"Configuration missing (reason: __reason__)",
+            "invalidconfig":"Configuration invalid (reason: __reason__)",
+            "noquery":"No query",
+            "missingconfigV3": "Configuration missing or invalid (reason: __reason__)",
+            "missingtoken": "Token is missing in configuration"
         },
         "tip": {
             "measurement": "<b> Tip:</b> If no measurement is specified, ensure <b>msg.measurement</b> contains the measurement name.",
             "retention-policy": "<b> Tip:</b> If no retention policy is specified, <b>autogen</b> will be assumed.",
             "querytip": "<b> Tip:</b> If no query is set, ensure <b>msg.query</b> contains a query."
+        },
+        "status": {
+            "writing": "Writing data",
+            "querying": "Querying data"
         }
     }
 }
