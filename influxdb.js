@@ -81,11 +81,7 @@ module.exports = function (RED) {
             if (!this.credentials.token) {
                 this.error(RED._("influxdb.errors.missingtoken"));
                 return;
-            }
-             if (!dbForV3) {
-                this.error(RED._("influxdb.errors.missingconfig", { reason: "Database not configured for v3.0" }));
-                return;
-            }   
+            }  
             const v3Timeout = n.timeout !== undefined ? Math.floor(+(n.timeout) * 1000) : 10000;
             const v3RejectUnauthorized = n.rejectUnauthorized;
 
@@ -279,6 +275,8 @@ module.exports = function (RED) {
                         // Timestamp handling: if 'time' exists in fields, use it. Otherwise, the library will set the current one.
                         if (fields && fields.time !== undefined) {
                             point.setTimestamp(fields.time);
+                        } else {
+                            point.setTimestamp(new Date().getTime());
                         }
                         points_v3.push(point);
                     });
@@ -294,19 +292,24 @@ module.exports = function (RED) {
                     }
                     if (fields && fields.time !== undefined) {
                         point.setTimestamp(fields.time);
+                    } else {
+                        point.setTimestamp(new Date().getTime());
                     }
                     points_v3.push(point);
                 }
-                } else { // Objeto od fields
+                } else { // Object of fields
                     let point = new PointV3(measurement);
                     if (_.isPlainObject(msg.payload)) {
                         let fields = msg.payload;
                         addFieldsToPointV3(point, fields);
                         if (fields && fields.time !== undefined) {
                             point.setTimestamp(fields.time);
+                        } else {
+                            point.setTimestamp(new Date().getTime());
                         }
                 } else { // Single value
-                    addFieldToPointV3(point, 'value', msg.payload);                    
+                    addFieldToPointV3(point, 'value', msg.payload);
+                    point.setTimestamp(new Date().getTime());
                 }
                 points_v3.push(point);
             }
@@ -509,7 +512,8 @@ module.exports = function (RED) {
         }
         let version = this.influxdbConfig.influxdbVersion;
 
-        var node = this;
+        var node = this;  // Capure 'this' to be used in 'input' listener
+        node.status({}); // Clear initial status
 
         if (version === VERSION_1X) {
             var client = this.influxdbConfig.client;
@@ -587,13 +591,15 @@ module.exports = function (RED) {
                 const org_v3_batch = node.org;
                 const precision_v3_batch = msg.precision || node.precisionV30;
 
+                const points_v3 = [];
+
                 try {
-                    const points_v3_batch = msg.payload.map(element => {
+                    msg.payload.forEach(element => {
                         if (!element.measurement) {
-                            node.warn(`Batch point missing 'measurement', skipping: ${JSON.stringify(element)}`);
+                            node.warn("Batch point missing 'measurement', skipping: ${JSON.stringify(element)}");
                             return null;
                         }
-                        const point = new PointV3(element.measurement);
+                        let point = new PointV3(element.measurement);
                         if (element.fields && typeof element.fields === 'object') {
                             addFieldsToPointV3(point, element.fields);
                         }
@@ -607,21 +613,26 @@ module.exports = function (RED) {
                         } else if (element.fields && element.fields.time !== undefined) {
                             point.setTimestamp(element.fields.time); // Use fields.time if timestamp is not provided                            
                         }                        
-                        return point;
-                    }).filter(p => p !== null); // Filtrar los puntos que eran inválidos (sin measurement)
+                        points_v3.push(point);
+                    });
 
-                    if (points_v3_batch.length === 0 && msg.payload.length > 0) {
+                    if (points_v3.length === 0 && msg.payload.length > 0) {
                         node.warn("All points in batch were invalid (e.g., missing measurement).");
                         node.status({});
                         return done();
                     }
-                     if (points_v3_batch.length === 0) {
-                         node.warn("No valid points to write in batch.");
-                         node.status({});
-                         return done();
+                    if (points_v3.length === 0) {
+                        node.warn("No valid points to write in batch.");
+                        node.status({});
+                        return done();
                     }
 
-                    node.influxdbConfig.client.write(points_v3_batch, db_v3_batch, org_v3_batch, { precision: precision_v3_batch })
+                    //points_v3_batch = new PointV3("test_measurement");
+                    //points_v3_batch.setTag("test_tag", "test_value");
+                    //points_v3_batch.setField("test_field", 123);
+                    //points_v3_batch.setTimestamp(new Date().getTime());
+
+                    node.influxdbConfig.client.write(points_v3, db_v3_batch, org_v3_batch, { precision: precision_v3_batch })
                         .then(() => {
                             node.status({});
                             done();
@@ -767,12 +778,12 @@ module.exports = function (RED) {
                     try {
                         const queryResultStream = node.influxdbConfig.client.query(query_v3, db_v3_in, queryOptions_v3);
                         for await (const row of queryResultStream) {
-                             if (!node.influxdbConfig.activeQueries.has(queryId)) {
+                            if (!node.influxdbConfig.activeQueries.has(queryId)) {
                                 // Query was cancelled (node closed/redeployed), stop processing
                                 RED.log.debug(`InfluxDB In: Query ${queryId.toString()} cancelled.`);
-                                break; 
+                                break;
                             }
-                            results_v3.push(row);
+                            results_v3.push({ ...row });
                         }
                         
                         if (node.influxdbConfig.activeQueries.has(queryId)) { 

@@ -37,7 +37,8 @@
         },
         "status": {
             "writing": "Escribiendo datos",
-            "querying": "Consultando datos"
+            "querying": "Consultando datos",
+            "error": "Error"
         }
     }
 }

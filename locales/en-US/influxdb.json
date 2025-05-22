@@ -37,7 +37,8 @@
         },
         "status": {
             "writing": "Writing data",
-            "querying": "Querying data"
+            "querying": "Querying data",
+            "error": "Error"
         }
     }
 }
