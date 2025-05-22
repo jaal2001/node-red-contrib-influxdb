@@ -627,11 +627,6 @@ module.exports = function (RED) {
                         return done();
                     }
 
-                    //points_v3_batch = new PointV3("test_measurement");
-                    //points_v3_batch.setTag("test_tag", "test_value");
-                    //points_v3_batch.setField("test_field", 123);
-                    //points_v3_batch.setTimestamp(new Date().getTime());
-
                     node.influxdbConfig.client.write(points_v3, db_v3_batch, org_v3_batch, { precision: precision_v3_batch })
                         .then(() => {
                             node.status({});

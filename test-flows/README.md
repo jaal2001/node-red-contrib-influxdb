@@ -52,6 +52,8 @@ You can then get a token for your configuration by clicking on the 'Data/Tokens'
         * Password: my-password
         * Token: Create one under `Data/Tokens`
 
+* Load test-flows_v1x_v1.8_v2.json into Node-RED and deploy
+
 ## Try test queries
 
 Try these queries to ensure they work using the web front ends.  You should get no errors, no results initially.
@@ -71,3 +73,14 @@ Try these queries to ensure they work using the web front ends.  You should get 
         from(bucket: "test")
           |> range(start: -1m, stop: 1h)
           |> filter(fn: (r) => r._measurement == "test")
+
+## InfluxDB3:
+
+Load test-flows_v3.json into Node-RED and deploy
+
+* The test flow parameters are configured as follows:
+    * Bucket: test
+    * Measurement: test
+    * Precision: ms
+    * Organisation: my-org
+    * Token: Create one under `API Tokens`

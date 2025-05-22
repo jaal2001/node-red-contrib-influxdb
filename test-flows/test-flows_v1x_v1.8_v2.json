@@ -2,7 +2,7 @@
   {
     "id": "c535e74d.ab40f",
     "type": "tab",
-    "label": "InfluxDB tests",
+    "label": "InfluxDB v1.x v1.8 v2 tests",
     "disabled": false,
     "info": "# InfluxDb Node Tests\n\nBefore starting up influxdb nodes, run all tests\nby clicking on inject nodes to ensure error handling is working.\n\nThe catch node should display an error 'connection refused' for all other than the \n`no query error` test.\n\nThen, start the databases as described in the README, adding tokens and credentials as needed to configuration nodes.\n\nAll segments should not throw errors.\n\nThe segment with the comment _check write test_ will ensure that data is actually written to the database by reading back the last entry once the output node has finished writing.\n"
   },

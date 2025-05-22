@@ -1,0 +1,535 @@
+[
+    {
+        "id": "8bb78aff5473f2d5",
+        "type": "tab",
+        "label": "InfluxDB v3 tests",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "695e854b4f4dd50a",
+        "type": "inject",
+        "z": "8bb78aff5473f2d5",
+        "name": "",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "e9cf9c343999bec8"
+            ]
+        ]
+    },
+    {
+        "id": "e9cf9c343999bec8",
+        "type": "function",
+        "z": "8bb78aff5473f2d5",
+        "name": "Single Value",
+        "func": "msg.payload = Math.random()*10;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 100,
+        "wires": [
+            [
+                "c27276b805aa0d6e"
+            ]
+        ]
+    },
+    {
+        "id": "c27276b805aa0d6e",
+        "type": "influxdb out",
+        "z": "8bb78aff5473f2d5",
+        "influxdb": "c18318fe64a0c282",
+        "name": "",
+        "measurement": "test",
+        "precision": "ms",
+        "retentionPolicy": "",
+        "database": "test",
+        "precisionV18FluxV20": "ms",
+        "precisionV30": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "org",
+        "bucket": "test",
+        "x": 670,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "383718298cdf7207",
+        "type": "inject",
+        "z": "8bb78aff5473f2d5",
+        "name": "",
+        "props": [
+            {
+                "p": "payload",
+                "v": "",
+                "vt": "date"
+            },
+            {
+                "p": "topic",
+                "v": "",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 160,
+        "wires": [
+            [
+                "d78635f203524b29"
+            ]
+        ]
+    },
+    {
+        "id": "d78635f203524b29",
+        "type": "function",
+        "z": "8bb78aff5473f2d5",
+        "name": "Fields",
+        "func": "msg.payload = {\n    intValue: '10i',\n    numValue: 11.0,\n    strValue: \"message\",\n    randomValue: Math.random()*10,\n    time: 1747909599000\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 160,
+        "wires": [
+            [
+                "3c9eaeb6bd2d403b"
+            ]
+        ]
+    },
+    {
+        "id": "3c9eaeb6bd2d403b",
+        "type": "influxdb out",
+        "z": "8bb78aff5473f2d5",
+        "influxdb": "c18318fe64a0c282",
+        "name": "",
+        "measurement": "test",
+        "precision": "ms",
+        "retentionPolicy": "",
+        "database": "test",
+        "precisionV18FluxV20": "ms",
+        "precisionV30": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "org",
+        "bucket": "test",
+        "x": 670,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "75339da7cbb5cf66",
+        "type": "function",
+        "z": "8bb78aff5473f2d5",
+        "name": "Fields and Tags",
+        "func": "msg.payload = [{\n    numValue: 12,\n    randomValue: Math.random()*10,\n    strValue: \"message2\",\n    time: 1747909599001\n},\n{\n    tag1:\"sensor1\",\n    tag2:\"device2\"\n}];\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 220,
+        "wires": [
+            [
+                "9725f15d71acd61e"
+            ]
+        ]
+    },
+    {
+        "id": "ff4fa9434d0117ce",
+        "type": "inject",
+        "z": "8bb78aff5473f2d5",
+        "name": "",
+        "props": [
+            {
+                "p": "payload",
+                "v": "",
+                "vt": "date"
+            },
+            {
+                "p": "topic",
+                "v": "",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 220,
+        "wires": [
+            [
+                "75339da7cbb5cf66"
+            ]
+        ]
+    },
+    {
+        "id": "9725f15d71acd61e",
+        "type": "influxdb out",
+        "z": "8bb78aff5473f2d5",
+        "influxdb": "c18318fe64a0c282",
+        "name": "",
+        "measurement": "test",
+        "precision": "ms",
+        "retentionPolicy": "",
+        "database": "test",
+        "precisionV18FluxV20": "ms",
+        "precisionV30": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "org",
+        "bucket": "test",
+        "x": 670,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "7963274adfa12e03",
+        "type": "function",
+        "z": "8bb78aff5473f2d5",
+        "name": "multiple readings",
+        "func": "msg.payload = [\n    [{\n        numValue: 100,\n        randomValue: Math.random()*10,\n        strValue: \"message1\",\n        time: new Date().getTime()-1 // ensure not the same!\n    },\n    {\n        tag1:\"sensor2\",\n        tag2:\"device3\"\n    }],\n    [{\n        numValue: 200,\n        randomValue: Math.random()*10,\n        strValue: \"message2\",\n        time: new Date().getTime()\n    },\n    {\n        tag1:\"sensor2\",\n        tag2:\"device3\"\n    }]\n];\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 280,
+        "wires": [
+            [
+                "722578db1ac95a1a"
+            ]
+        ]
+    },
+    {
+        "id": "6a86758c1e610bc7",
+        "type": "inject",
+        "z": "8bb78aff5473f2d5",
+        "name": "",
+        "props": [
+            {
+                "p": "payload",
+                "v": "",
+                "vt": "date"
+            },
+            {
+                "p": "topic",
+                "v": "",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 280,
+        "wires": [
+            [
+                "7963274adfa12e03"
+            ]
+        ]
+    },
+    {
+        "id": "722578db1ac95a1a",
+        "type": "influxdb out",
+        "z": "8bb78aff5473f2d5",
+        "influxdb": "c18318fe64a0c282",
+        "name": "",
+        "measurement": "test",
+        "precision": "ms",
+        "retentionPolicy": "",
+        "database": "test",
+        "precisionV18FluxV20": "ms",
+        "precisionV30": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "org",
+        "bucket": "test",
+        "x": 670,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "76d23a63a3a84546",
+        "type": "inject",
+        "z": "8bb78aff5473f2d5",
+        "name": "",
+        "props": [
+            {
+                "p": "payload",
+                "v": "",
+                "vt": "date"
+            },
+            {
+                "p": "topic",
+                "v": "",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 400,
+        "wires": [
+            [
+                "14aff76120679ed9"
+            ]
+        ]
+    },
+    {
+        "id": "14aff76120679ed9",
+        "type": "influxdb in",
+        "z": "8bb78aff5473f2d5",
+        "influxdb": "c18318fe64a0c282",
+        "name": "",
+        "query": "SELECT * FROM test ORDER BY time DESC",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "organisation",
+        "database": "test",
+        "queryLanguage": "influxql",
+        "x": 420,
+        "y": 400,
+        "wires": [
+            [
+                "b0fc0cf9ba5f3af0"
+            ]
+        ]
+    },
+    {
+        "id": "b0fc0cf9ba5f3af0",
+        "type": "debug",
+        "z": "8bb78aff5473f2d5",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "e593fcced3bfa438",
+        "type": "influxdb in",
+        "z": "8bb78aff5473f2d5",
+        "influxdb": "c18318fe64a0c282",
+        "name": "",
+        "query": "SHOW MEASUREMENTS",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "org",
+        "database": "test",
+        "queryLanguage": "influxql",
+        "x": 420,
+        "y": 460,
+        "wires": [
+            [
+                "3028780b8c52e0a3"
+            ]
+        ]
+    },
+    {
+        "id": "b3e7f26a7175371d",
+        "type": "inject",
+        "z": "8bb78aff5473f2d5",
+        "name": "",
+        "props": [
+            {
+                "p": "payload",
+                "v": "",
+                "vt": "date"
+            },
+            {
+                "p": "topic",
+                "v": "",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 460,
+        "wires": [
+            [
+                "e593fcced3bfa438"
+            ]
+        ]
+    },
+    {
+        "id": "3028780b8c52e0a3",
+        "type": "debug",
+        "z": "8bb78aff5473f2d5",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "7ee27bc90db65a10",
+        "type": "inject",
+        "z": "8bb78aff5473f2d5",
+        "name": "",
+        "props": [
+            {
+                "p": "payload",
+                "v": "",
+                "vt": "date"
+            },
+            {
+                "p": "topic",
+                "v": "",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 600,
+        "wires": [
+            [
+                "c0f2be22a5ef1928"
+            ]
+        ]
+    },
+    {
+        "id": "ba7e86f098b86e26",
+        "type": "influxdb batch",
+        "z": "8bb78aff5473f2d5",
+        "influxdb": "c18318fe64a0c282",
+        "precision": "",
+        "retentionPolicy": "",
+        "name": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "precisionV30": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "org",
+        "bucket": "test",
+        "x": 680,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "c0f2be22a5ef1928",
+        "type": "function",
+        "z": "8bb78aff5473f2d5",
+        "name": "multiple measurement points",
+        "func": "msg.payload = [\n    {\n        measurement: \"weather_sensor\",\n        fields: {\n            temp: 5.5,\n            light: 678,\n            humidity: 51\n        },\n        tags:{\n            location:\"garden\"\n        },\n        timestamp: new Date().getTime()\n    },\n    {\n        measurement: \"alarm_sensor\",\n        fields: {\n            proximity: 999,\n            temp: 19.5\n        },\n        tags:{\n            location:\"home\"\n        },\n        timestamp: new Date().getTime()\n    }\n];\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 600,
+        "wires": [
+            [
+                "ba7e86f098b86e26"
+            ]
+        ]
+    },
+    {
+        "id": "f5112393fef6cc2f",
+        "type": "comment",
+        "z": "8bb78aff5473f2d5",
+        "name": "influxdb out",
+        "info": "",
+        "x": 90,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "a1fb4faf4be018c9",
+        "type": "comment",
+        "z": "8bb78aff5473f2d5",
+        "name": "influxdb in",
+        "info": "",
+        "x": 80,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "b4b80de23fa4a211",
+        "type": "comment",
+        "z": "8bb78aff5473f2d5",
+        "name": "influx batch",
+        "info": "",
+        "x": 90,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "c18318fe64a0c282",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": 8086,
+        "protocol": "http",
+        "database": "database",
+        "name": "influxdb3-tests",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "3.0",
+        "url": "http://192.168.1.57:8181",
+        "timeout": 10,
+        "rejectUnauthorized": false
+    }
+]
