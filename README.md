@@ -2,35 +2,37 @@
 
 <a href="http://nodered.org" target="_new">Node-RED</a> nodes to write and query data from an InfluxDB time series database.
 
-These nodes support both InfluxDB 1.x and InfluxDb 2.0 databases selected using the **Version** combo box in the configuration node.  See the documentation of the different nodes to understand the options provided by the different versions.  Currently the node uses two client libraries.
+These nodes support both InfluxDB 1.x, InfluxDb 2.0 and InfluxDB 3.0 databases selected using the **Version** combo box in the configuration node.  See the documentation of the different nodes to understand the options provided by the different versions. Currently the node uses three client libraries.
 
-When version **1.x** is selected these nodes use the <a href="https://www.npmjs.com/package/influx" target="_new">influxDB 1.x client</a> for node.js, specifically calling the **writePoints()**, and **query()** methods. Currently they can only communicate with one influxdb host. These nodes are used for writing and querying data in InfluxDB 1.x to 1.8+.
+When version **1.x** is selected these nodes use the <a href="https://www.npmjs.com/package/influx" target="_new">influxDB 1.x client</a> for node.js, specifically calling the **writePoints()**, and **query()** methods. Currently they can only communicate with one InfluxDB host. These nodes are used for writing and querying data in InfluxDB 1.x to 1.8+.
 
 When version **1.8-flux** is selected, the nodes use the <a href="https://docs.influxdata.com/influxdb/v1.8/tools/api/#influxdb-2-0-api-compatibility-endpoints" target="_new"> influxDB 2.0 API compatibility endpoints</a> available in the <a href="https://github.com/influxdata/influxdb-client-js" target="_new">InfluxDB 2.0 client libraries</a> for node.js. These nodes are used for writing and querying data with Flux in InfluxDB 1.8+.
 
-When version **2.0** is selected, the nodes make use of the <a href="https://github.com/influxdata/influxdb-client-js" target="_new">InfluxDB 2.0 client libraries</a> for writing and querying data with Flux in InfluxDB 2.0.  
+When version **2.0** is selected, the nodes make use of the <a href="https://github.com/influxdata/influxdb-client-js" target="_new">InfluxDB 2.0 client libraries</a> for writing and querying data with Flux in InfluxDB 2.0.
+
+When version **3.0** is selected, the nodes make use of the <a href="https://github.com/InfluxCommunity/influxdb3-js" target="_new">InfluxDB 3.0 client libraries</a> for writing and querying data with InfluxQL or SQL in InfluxDB 3.0.
 
 ## Prerequisites
 
-To run this you'll need access to an InfluxDB database version 1.x, 1.8+ or 2.0. See the <a href="https://influxdb.com/" target="_new">InfluxDB site</a> for more information. The latest release of this node has been tested with InfluxDB 1.8 and 2.0.  This node supports Node.js 10.x, 12.x and 14.x LTS releases.  It does **not** support Node.js 8.x.  This node does not support Node-RED before version 1.0.
+To run this you'll need access to an InfluxDB database version 1.x, 1.8+, 2.0 or 3.0. See the <a href="https://influxdb.com/" target="_new">InfluxDB site</a> for more information. The latest release of this node has been tested with InfluxDB 1.8, 2.0 and 3.0. This node supports Node.js >18.0 LTS releases. It does **not** support Node.js 8.x. This node does not support Node-RED before version 1.0.
 
 ## Install
 
-You can use the Node-RED *Manage Palette* feature, or run the following command in the root directory of your Node-RED install.  Usually this is `~/.node-red` .
+You can use the Node-RED *Manage Palette* feature, or run the following command in the root directory of your Node-RED install. Usually this is `~/.node-red` .
 
     npm install node-red-contrib-influxdb
 
 ##  Usage
 
-Nodes to write and query data from an influxdb time series database. Supports InfluxDb versions 1.x to 2.0.
+Nodes to write and query data from an InfluxDB time series database. Supports InfluxDb versions 1.x to 3.0.
 
 ### Input Node
 
-Queries one or more measurements in an influxdb database.  The query is specified in the node configuration or in the ***msg.query*** property.  Setting it in the node will override the ***msg.query***.  The result is returned in ***msg.payload***.
+Queries one or more measurements in an InfluxDB database.  The query is specified in the node configuration or in the ***msg.query*** property.  Setting it in the node will override the ***msg.query***.  The result is returned in ***msg.payload***.
 
-With a v1.x InfluxDb configuration, use the [InfluxQL query syntax](https://docs.influxdata.com/influxdb/v1.8/query_language/).  With a v1.8-Flux or 2.0 configuration, use the [Flux query syntax](https://docs.influxdata.com/influxdb/v2.0/query-data/get-started/).
+With a v1.x InfluxDb configuration, use the [InfluxQL query syntax](https://docs.influxdata.com/influxdb/v1.8/query_language/). With a v1.8-Flux or 2.0 configuration, use the [Flux query syntax](https://docs.influxdata.com/influxdb/v2.0/query-data/get-started/). With a v3.0 configuration, use the [InfluxQL or SQL query syntax](https://docs.influxdata.com/influxdb3/core/query-data/influxql/basic-query/).
 
-For example, here is a simple flow to query all of the points in the `test` measurement of the `test` database. The query is in the configuration of the influxdb input node (copy and paste to your Node-RED editor). We are using a v1.x InfluxDb here, so an InfluxQL query is used.
+For example, here is a simple flow to query all of the points in the `test` measurement of the `test` database. The query is in the configuration of the InfluxDB input node (copy and paste to your Node-RED editor). We are using a v1.x InfluxDb here, so an InfluxQL query is used.
 
     [{"id":"39aa2ca9.804da4","type":"debug","z":"6256f76b.e596d8","name":"","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"false","x":530,"y":100,"wires":[]},{"id":"262a3923.e7b216","type":"influxdb in","z":"6256f76b.e596d8","influxdb":"eeb221fb.ab27f","name":"","query":"SELECT * from test","rawOutput":false,"precision":"","retentionPolicy":"","org":"my-org","x":310,"y":100,"wires":[["39aa2ca9.804da4"]]},{"id":"803d82f.ff80f8","type":"inject","z":"6256f76b.e596d8","name":"","repeat":"","crontab":"","once":false,"onceDelay":0.1,"topic":"","payload":"","payloadType":"date","x":100,"y":100,"wires":[["262a3923.e7b216"]]},{"id":"eeb221fb.ab27f","type":"influxdb","hostname":"127.0.0.1","port":"8086","protocol":"http","database":"test","name":"test","usetls":true,"tls":"d50d0c9f.31e858","influxdbVersion":"1.x","url":"http://localhost:8086","rejectUnauthorized":true},{"id":"d50d0c9f.31e858","type":"tls-config","name":"","cert":"","key":"","ca":"","certname":"","keyname":"","caname":"","servername":"","verifyservercert":false}]
 
@@ -82,7 +84,7 @@ The function node in the flow above consists of the following:
 
 If ***msg.payload*** is an array containing two objects, the first object will be written as the set of named fields, the second is the set of named tags.
 
-For example, the following simple flow uses an InfluxDb 2.0 database and injects four fields as above, along with two tags, `tag1` and `tag2`:
+For example, the following simple flow uses an InfluxDB 2.0 database and injects four fields as above, along with two tags, `tag1` and `tag2`:
 
     [{"id":"15c79e62.9294c2","type":"inject","z":"6256f76b.e596d8","name":"","repeat":"","crontab":"","once":false,"topic":"","payload":"","payloadType":"date","x":120,"y":560,"wires":[["a97b005f.7f22e"]]},{"id":"a97b005f.7f22e","type":"function","z":"6256f76b.e596d8","name":"Fields and Tags","func":"msg.payload = [{\n    intValue: '10i',\n    numValue: 12,\n    randomValue: Math.random()*10,\n    strValue: \"message2\"\n},\n{\n    tag1:\"sensor1\",\n    tag2:\"device2\"\n}];\nreturn msg;","outputs":1,"noerr":0,"initialize":"","finalize":"","x":280,"y":560,"wires":[["a91d522b.9a077"]]},{"id":"a91d522b.9a077","type":"influxdb out","z":"6256f76b.e596d8","influxdb":"5d7e54ca.019d44","name":"","measurement":"test","precision":"ms","retentionPolicy":"","database":"test","precisionV18FluxV20":"ms","retentionPolicyV18Flux":"","org":"my-org","bucket":"test","x":510,"y":560,"wires":[]},{"id":"5d7e54ca.019d44","type":"influxdb","hostname":"127.0.0.1","port":"8086","protocol":"http","database":"database","name":"","usetls":false,"tls":"d50d0c9f.31e858","influxdbVersion":"2.0","url":"https://localhost:9999","rejectUnauthorized":false},{"id":"d50d0c9f.31e858","type":"tls-config","name":"","cert":"","key":"","ca":"","certname":"","keyname":"","caname":"","servername":"","verifyservercert":false}]
 
@@ -136,6 +138,8 @@ The function node in the above flow looks as follows:
 
 Note how timestamps are specified here - the number of milliseconds since 1 January 1970 00:00:00 UTC. In this case do not forget to set the precision to "ms" in "Time Precision" of the "Influx Out Node".  We make sure the timestamps are a different so the first element doesn't get overwritten by the second.
 
+> Note: The usage for InfluxDB v3.0 is similar to the InfluxDB v2.0 shown above.
+
 ### The Batch Output Node
 
 The batch output node (influx batch) sends a list of *points* together in a batch to InfluxDB in a slightly different format from the output node. Using the batch node you must specify the measurement name to write into as well as a list of tag and field values. Optionally, you can specify the timestamp for the point, defaulting to the current time.
@@ -181,12 +185,14 @@ The function node generates sample points as follows:
     ];
     return msg;
 
+> Note: The usage for InfluxDB v3.0 is similar to the InfluxDB v2.0 shown above.
+
 ### Catching Failed Reads and Writes
 
 Errors in reads and writes can be caught using the node-red `catch` node as usual.
 Standard error information is availlable in the default `msg.error` field; additional
 information about the underlying error is in the `msg.influx_error` field. Currently,
-this includes the HTTP status code returned from the influxdb server. The `influx-read`
+this includes the HTTP status code returned from the InfluxDB server. The `influx-read`
 node will always throw a `503`, whereas the write nodes will include other status codes
 as detailed in the 
 [Influx API documentation](https://docs.influxdata.com/influxdb/v1.8/tools/api/#status-codes-and-responses-2).
