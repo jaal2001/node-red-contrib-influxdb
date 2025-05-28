@@ -279,7 +279,7 @@
 </script>
 
 <script type="text/html" data-help-name="influxdb out">
-    <p>A simple influxdb output node to write values and tags to an influxdb measurement.</p>
+    <p>A simple influxdb output node to write values and tags to an InfluxDB measurement.</p>
     <p>The fields and tags to write are in <b>msg.payload</b>. If <b>msg.payload</b> is a string, number, or boolean, 
     it will be written as a single value to the specified measurement (called <i>value</i>).</p>
     <p>If <b>msg.payload</b> is an object containing multiple properties, the fields will be written to the measurement.</p>
@@ -294,9 +294,10 @@
     <p>The advanced query options <i>Time Precision</i> and <i>Retention Policy</i> can be overwritten using 
     message properties <b>msg.precision</b> and <b>msg.retentionPolicy</b>.</p>
 
-    <p><b>InfluxDB 1.8 Flux and InfluxDB 2.0 Mode</b></p>
+    <p><b>InfluxDB 1.8 Flux Mode</b></p>
     <p>If no retention policy is specified, <i>autogen</i> will be assumed.</p>
-    <p>For v3.0, 'Bucket / Database' field refers to the InfluxDB v3 database name.</p>
+    <p><b>InfluxDB 2.0 and 3.0 Mode</b></p>
+    <p>Bucket field refers to the InfluxDB v3 database name.</p>
 </script>
 
 <script type="text/javascript">
@@ -751,8 +752,16 @@
     <p>The advanced query options <i>Time Precision</i> and <i>Retention Policy</i> can be overwritten using 
     message properties <b>msg.precision</b> and <b>msg.retentionPolicy</b>.</p>
 
-    <p>&nbsp;</p><p><b>InfluxDB 1.8 Flux and InfluxDB 2.0</b></p>
+    <p>&nbsp;</p><p><b>InfluxDB 1.8 Flux</b></p>
     <p>Uses a flux query in the configuration property or using the property
+    <b>msg.query</b>. The results will be returned in <b>msg.payload</b>.</p>
+
+    <p>&nbsp;</p><p><b>InfluxDB 2.0</b></p>
+    <p>Uses a flux query in the configuration property or using the property
+    <b>msg.query</b>. The results will be returned in <b>msg.payload</b>.</p>
+
+    <p>&nbsp;</p><p><b>InfluxDB 3.0</b></p>
+    <p>Uses an InfluxQL or an SQLquery in the configuration property or using the property
     <b>msg.query</b>. The results will be returned in <b>msg.payload</b>.</p>
 </script>
 
