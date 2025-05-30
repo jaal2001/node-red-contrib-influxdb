@@ -24,7 +24,7 @@ You can use the Node-RED *Manage Palette* feature, or run the following command 
 
 ##  Usage
 
-Nodes to write and query data from an InfluxDB time series database. Supports InfluxDb versions 1.x to 3.0.
+Nodes to write and query data from an InfluxDB time series database. Supports InfluxDB versions 1.x to 3.0.
 
 ### Input Node
 
