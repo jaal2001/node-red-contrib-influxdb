@@ -144,30 +144,29 @@ module.exports = function (RED) {
         }
     }
 
-    function addFieldToPointV3(pointV3, name, value) {
-        if (name === 'time') { 
-            return; 
-        }
-        if (typeof value === 'number') {
-            if (Number.isInteger(value)) {
-                pointV3.setIntegerField(name, value);
-            } else {
-                pointV3.setFloatField(name, value);
-            }
-        } else if (typeof value === 'string') {
-            // string values with numbers ending with 'i' are considered integers    
-            if (isIntegerString(value)) {
-                pointV3.setIntegerField(name, parseInt(value.substring(0, value.length - 1)));
-            } else {
-                pointV3.setStringField(name, value);
-            }
-        } else if (typeof value === 'boolean') {
-            pointV3.setBooleanField(name, value);
-        } else if (typeof value === 'bigint') { 
-            pointV3.setIntegerField(name, value); 
-        }
-        // Null or undefined values are ignored
+function addFieldToPointV3(pointV3, name, value) {
+    if (name === 'time') {
+        return;
     }
+    if (typeof value === 'number') {
+        // MODIFIED: Treat all numbers (integers and floats) as float.
+        pointV3.setFloatField(name, value);
+    } else if (typeof value === 'string') {
+        // String values ending with 'i' are considered integers.
+        if (isIntegerString(value)) {
+            pointV3.setIntegerField(name, parseInt(value.substring(0, value.length - 1)));
+        } else {
+            pointV3.setStringField(name, value);
+        }
+    } else if (typeof value === 'boolean') {
+        pointV3.setBooleanField(name, value);
+    } else if (typeof value === 'bigint') {
+        // BigInt is still treated as an integer.
+        // If needed, you could cast it to a float using Number(value).
+        pointV3.setIntegerField(name, value);
+    }
+    // Null or undefined values are ignored.
+}
 
     function addFieldsToPointV2(pointV2, fields) {
         for (const prop in fields) {
