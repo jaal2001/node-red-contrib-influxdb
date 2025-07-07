@@ -10,7 +10,7 @@ When version **1.8-flux** is selected, the nodes use the <a href="https://docs.i
 
 When version **2.0** is selected, the nodes make use of the <a href="https://github.com/influxdata/influxdb-client-js" target="_new">InfluxDB 2.0 client libraries</a> for writing and querying data with Flux in InfluxDB 2.0.
 
-When version **3.0** is selected, the nodes make use of the <a href="https://github.com/InfluxCommunity/influxdb3-js" target="_new">InfluxDB 3.0 client libraries</a> for writing and querying data with InfluxQL or SQL in InfluxDB 3.0.
+When version **3.0** is selected, the nodes make use of the <a href="https://github.com/InfluxCommunity/influxdb3-js" target="_new">InfluxDB 3.0 client libraries</a> for writing and querying data with InfluxQL or SQL in InfluxDB 3.0. This has been modified to use only float and never integer.
 
 ## Prerequisites
 
